@@ -8,6 +8,7 @@ let w = window.innerWidth
 let h = window.innerHeight
 let angle = 0
 let mode = 0
+let path = new Path2D()
 
 //use strokerect
 const RECT = 0
@@ -22,6 +23,7 @@ const modeName = ["strokerect", "path.rect", "path.lineTo", "c.lineTo"]
 
 // it's not a constant so it can be updated from the dev console
 let GRID_SIZE = 20
+let lastGridSize = -1   // to see if we have to regenerate the graph
 
 window.addEventListener('keydown', e => {
     if(e.keyCode == 65) {   //a
@@ -42,14 +44,27 @@ rotate = (x, y, angle) => {
     ]
 }
 
+initPath = () => {
+    path = new Path2D()
+    for(let i = 0; i < h / GRID_SIZE; i++) {
+        for(let j = 0; j < w / GRID_SIZE; j++) {
+            path.rect(j * GRID_SIZE, i * GRID_SIZE, GRID_SIZE, GRID_SIZE)
+        }
+    }
+}
+
 render = ts => {
     a.width = w
     a.height = h
 
     c.fillStyle = '#28a'
     c.strokeStyle = '#fff'
-    
-    let path = new Path2D()
+
+    if(lastGridSize != GRID_SIZE) {
+        lastGridSize = GRID_SIZE
+
+        initPath()
+    }
 
     if(mode == RECT || mode == PATH) {
         //c.save()
@@ -63,29 +78,29 @@ render = ts => {
         c.beginPath()
     }
 
-    for(let i = 0; i < h / GRID_SIZE; i++) {
-        for(let j = 0; j < w / GRID_SIZE; j++) {
-            if(mode == RECT) {
-                c.strokeRect(j * GRID_SIZE, i * GRID_SIZE, GRID_SIZE, GRID_SIZE)
-            } else if (mode == PATH) {
-                path.rect(j * GRID_SIZE, i * GRID_SIZE, GRID_SIZE, GRID_SIZE)
-            } else if (mode == CALC || mode == CALC_DIR) {
-                let x0 = j * GRID_SIZE
-                let y0 = i * GRID_SIZE
-                let x1 = j * GRID_SIZE + GRID_SIZE
-                let y1 = i * GRID_SIZE + GRID_SIZE
+    if (mode != PATH) {
+        for(let i = 0; i < h / GRID_SIZE; i++) {
+            for(let j = 0; j < w / GRID_SIZE; j++) {
+                if(mode == RECT) {
+                    c.strokeRect(j * GRID_SIZE, i * GRID_SIZE, GRID_SIZE, GRID_SIZE)
+                } else if (mode == CALC || mode == CALC_DIR) {
+                    let x0 = j * GRID_SIZE
+                    let y0 = i * GRID_SIZE
+                    let x1 = j * GRID_SIZE + GRID_SIZE
+                    let y1 = i * GRID_SIZE + GRID_SIZE
 
-                let coord0 = rotate(x0, y0, angle)
-                let coord1 = rotate(x1, y0, angle)
-                let coord2 = rotate(x1, y1, angle)
-                let coord3 = rotate(x0, y1, angle)
-                
-                let ctx = (mode == CALC) ? path : c
-                ctx.moveTo(coord0[0], coord0[1])
-                ctx.lineTo(coord1[0], coord1[1])
-                ctx.lineTo(coord2[0], coord2[1])
-                ctx.lineTo(coord3[0], coord3[1])
-                ctx.lineTo(coord0[0], coord0[1])
+                    let coord0 = rotate(x0, y0, angle)
+                    let coord1 = rotate(x1, y0, angle)
+                    let coord2 = rotate(x1, y1, angle)
+                    let coord3 = rotate(x0, y1, angle)
+                    
+                    let ctx = (mode == CALC) ? path : c
+                    ctx.moveTo(coord0[0], coord0[1])
+                    ctx.lineTo(coord1[0], coord1[1])
+                    ctx.lineTo(coord2[0], coord2[1])
+                    ctx.lineTo(coord3[0], coord3[1])
+                    ctx.lineTo(coord0[0], coord0[1])
+                }
             }
         }
     }
