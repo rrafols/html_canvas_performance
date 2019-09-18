@@ -1,0 +1,36 @@
+<style> body { margin: 0; background: #202020;  } </style>
+<canvas></canvas>
+<script>
+
+const MAX_IT = 4
+let a = document.getElementsByTagName('canvas')[0]
+let c = a.getContext('2d')
+let w = window.innerWidth
+let h = window.innerHeight
+
+split = (x, y, length, angle, it) => {
+    if (it >= MAX_IT) return
+
+    let x1 = x + length * Math.cos(angle)
+    let y1 = y - length * Math.sin(angle)
+
+    c.beginPath()
+    c.moveTo(x, y)
+    c.lineTo(x1, y1)
+    c.stroke()
+
+    split(x1, y1, length / 1.5, angle - Math.PI/4, it + 1)
+    split(x1, y1, length / 1.5, angle + Math.PI/4, it + 1)
+}
+
+render = ts => {
+    a.width = w
+    a.height = h
+
+    c.strokeStyle = '#fff'
+    split(w/2, h, h/3, Math.PI/2, 0)
+    requestAnimationFrame(render)
+}
+requestAnimationFrame(render)
+
+</script>

@@ -1,0 +1,64 @@
+<style> body { margin: 0; background: #202020;  } </style>
+<canvas></canvas>
+<script>
+
+// images from:
+// https://toen.itch.io/toens-medieval-strategy
+// https://dragosha.com/free/adventure-tileset.html
+
+const GRID_SIZE = 16
+let a = document.getElementsByTagName('canvas')[0]
+let c = a.getContext('2d')
+let w = window.innerWidth
+let h = window.innerHeight
+let angle = 0
+let mode = 0
+let points = []
+
+let image = new Image()
+image.src = 'tileset.png'
+
+let imageTile = new Image()
+imageTile.src = 't1.png'
+
+let imageLarge = new Image()
+imageLarge.src = 'h3.png'
+
+window.addEventListener('keydown', e => {
+    if(e.keyCode == 65) {   //a
+        angle -= Math.PI/8
+    } else if (e.keyCode == 68) { //d
+        angle += Math.PI/8
+    } else if (e.keyCode == 32) { //space
+        mode = (mode + 1) % 2
+        c.imageSmoothingEnabled = (mode == 0)
+        console.log("imageSmoothingEnabled: " + (mode == 0))
+    }
+})
+
+for(let i = 0; i < 2500; i++) {
+    points[i * 2    ] = Math.random() * w * 1.5 - w/2
+    points[i * 2 + 1] = Math.random() * h * 1.5 - h/2
+}
+
+render = ts => {
+    a.width = w
+    a.height = h
+
+    c.translate(w/2, h/2)
+    c.rotate(angle)
+    c.translate(-w/2, -h/2)
+    
+    if(imageLarge.naturalWidth != 0) {
+        for(let i = 0; i < 2500; i++) {
+            c.drawImage(imageLarge, 
+                points[i * 2], points[i * 2 + 1])
+        }
+    }
+
+    c.setTransform(1, 0, 0, 1, 0, 0)
+    requestAnimationFrame(render)
+}
+requestAnimationFrame(render)
+
+</script>

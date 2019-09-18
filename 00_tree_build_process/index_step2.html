@@ -1,0 +1,30 @@
+<style> body { margin: 0; background: #202020;  } </style>
+<canvas></canvas>
+<script>
+
+let a = document.getElementsByTagName('canvas')[0]
+let c = a.getContext('2d')
+let w = window.innerWidth
+let h = window.innerHeight
+
+split = (x, y, length, angle) => {
+    let x1 = x + length * Math.cos(angle)
+    let y1 = y - length * Math.sin(angle)
+
+    c.beginPath()
+    c.moveTo(x, y)
+    c.lineTo(x1, y1)
+    c.stroke()
+}
+
+render = ts => {
+    a.width = w
+    a.height = h
+
+    c.strokeStyle = '#fff'
+    split(w/2, h, h/3, Math.PI/2, 0)
+    requestAnimationFrame(render)
+}
+requestAnimationFrame(render)
+
+</script>

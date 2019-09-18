@@ -1,0 +1,62 @@
+<style> body { margin: 0; background: #202020;  } </style>
+<canvas></canvas>
+<script>
+
+// images from:
+// https://toen.itch.io/toens-medieval-strategy
+// https://dragosha.com/free/adventure-tileset.html
+
+const GRID_SIZE = 16
+let a = document.getElementsByTagName('canvas')[0]
+let c = a.getContext('2d')
+let w = window.innerWidth
+let h = window.innerHeight
+let angle = 0
+let mode = 0
+
+let image = new Image()
+image.src = 'tileset.png'
+
+let imageTile = new Image()
+imageTile.src = 't1.png'
+
+window.addEventListener('keydown', e => {
+    if(e.keyCode == 65) {   //a
+        angle -= Math.PI/8
+    } else if (e.keyCode == 68) { //d
+        angle += Math.PI/8
+    } else if (e.keyCode == 32) { //space
+        mode = (mode + 1) % 2
+    }
+})
+
+render = ts => {
+    a.width = w
+    a.height = h
+
+    c.translate(w/2, h/2)
+    c.rotate(angle)
+    c.translate(-w/2, -h/2)
+
+    for(let i = 0; i < h / GRID_SIZE; i++) {
+        for(let j = 0; j < w / GRID_SIZE; j++) {
+            if (mode == 0) {
+                c.save()
+                c.beginPath()
+                c.rect(j * GRID_SIZE, i * GRID_SIZE, GRID_SIZE+1, GRID_SIZE+1)
+                c.clip()
+                
+                c.drawImage(image, j * GRID_SIZE - 64, i * GRID_SIZE)
+                c.restore()
+            } else {
+                c.drawImage(imageTile, j * GRID_SIZE, i * GRID_SIZE)
+            }
+        }
+    }
+
+    c.setTransform(1, 0, 0, 1, 0, 0)
+    requestAnimationFrame(render)
+}
+requestAnimationFrame(render)
+
+</script>

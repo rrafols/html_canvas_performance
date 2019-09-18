@@ -1,0 +1,59 @@
+<style> body { margin: 0; background: #202020;  } </style>
+<canvas></canvas>
+<script src="node_modules/stats.js/build/stats.min.js"></script>
+<script>
+
+const MAX_IT = 8
+let a = document.getElementsByTagName('canvas')[0]
+let c = a.getContext('2d')
+let w = window.innerWidth
+let h = window.innerHeight
+let lines = 0
+
+var stats = new Stats();
+stats.showPanel(0);
+document.body.appendChild( stats.dom );
+
+split = (x, y, length, angle, displ, it) => {
+    if (it >= MAX_IT) return
+
+    angle += displ
+    let x1 = x + length * Math.cos(angle)
+    let y1 = y - length * Math.sin(angle)
+
+    c.beginPath()
+    c.moveTo(x, y)
+    c.lineTo(x1, y1)
+    c.stroke()
+    lines++
+
+    split(x1, y1, length / 1.5, angle - Math.PI/3, displ, it + 1)
+    split(x1, y1, length / 1.5, angle - Math.PI/8, displ, it + 1)
+    split(x1, y1, length / 1.5, angle + Math.PI/3, displ, it + 1)
+    split(x1, y1, length / 1.5, angle + Math.PI/8, displ, it + 1)
+}
+
+render = ts => {
+    stats.begin();
+
+    a.width = w
+    a.height = h
+
+    lines = 0
+    c.globalAlpha = 0.2
+    c.strokeStyle = '#fff'
+    
+    let angle = Math.PI*Math.sin(ts * 0.0003)*0.15 + Math.PI/2
+    split(w/2, h, h/3, angle, Math.cos(ts * 0.0004) * Math.PI/8, 0)
+    
+    c.globalAlpha = 1
+
+    c.fillStyle = '#fff'
+    c.fillText("lines: " + lines, w - 200, 20)
+
+    stats.end();
+    requestAnimationFrame(render)
+}
+requestAnimationFrame(render)
+
+</script>

@@ -1,0 +1,24 @@
+<style> body { margin: 0; background: #202020;  } </style>
+<canvas></canvas>
+<script>
+
+let a = document.getElementsByTagName('canvas')[0]
+let c = a.getContext('2d')
+let w = window.innerWidth
+let h = window.innerHeight
+
+render = ts => {
+    a.width = w
+    a.height = h
+
+    c.strokeStyle = '#fff'
+    c.beginPath()
+    c.moveTo(w/2, h)
+    c.lineTo(w/2, h - h/3)
+    c.stroke()
+    
+    requestAnimationFrame(render)
+}
+requestAnimationFrame(render)
+
+</script>

@@ -1,0 +1,16 @@
+<style> body { margin: 0; background: #202020;  } </style>
+<canvas></canvas>
+<script>
+
+let a = document.getElementsByTagName('canvas')[0]
+let c = a.getContext('2d')
+let w = window.innerWidth
+let h = window.innerHeight
+
+render = ts => {
+    
+    requestAnimationFrame(render)
+}
+requestAnimationFrame(render)
+
+</script>

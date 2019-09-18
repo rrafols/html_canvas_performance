@@ -1,0 +1,65 @@
+<style> body { margin: 0; background: #202020;  } </style>
+<canvas></canvas>
+<script>
+
+const MAX_IT = 10
+let a = document.getElementsByTagName('canvas')[0]
+let c = a.getContext('2d')
+let w = window.innerWidth
+let h = window.innerHeight
+let lines = 0
+let path = new Path2D()
+let callFunction = true
+
+window.addEventListener('keydown', e => {
+    if(e.keyCode == 32) callFunction = !callFunction
+})
+
+split = (x, y, length, angle, displ, it, generate) => {
+    if (it >= MAX_IT) return
+
+    angle += displ
+    let x1 = x + length * Math.cos(angle)
+    let y1 = y - length * Math.sin(angle)
+
+    if(generate) {
+        path.moveTo(x, y)
+        path.lineTo(x1, y1)
+        lines++
+    }
+
+    split(x1, y1, length / 1.5, angle - Math.PI/3, displ, it + 1, generate)
+    split(x1, y1, length / 1.5, angle - Math.PI/8, displ, it + 1, generate)
+    split(x1, y1, length / 1.5, angle + Math.PI/3, displ, it + 1, generate)
+    split(x1, y1, length / 1.5, angle + Math.PI/8, displ, it + 1, generate)
+}
+
+lines = 0
+split(w/2, h, h/3, Math.PI/2, 0, 0, true)
+
+render = ts => {
+    a.width = w
+    a.height = h
+
+    c.globalAlpha = 0.2
+    c.strokeStyle = '#fff'
+    
+    if (callFunction) {
+        c.fillStyle = '#f88'
+        let angle = Math.PI*Math.sin(ts * 0.0003)*0.15 + Math.PI/2
+        split(w/2, h, h/3, angle, Math.cos(ts * 0.0004) * Math.PI/8, 0, false)
+    } else {
+        c.fillStyle = '#fff'
+    }
+
+    c.stroke(path)
+    c.globalAlpha = 1
+
+    
+    c.fillText("lines: " + lines, w - 200, 20)
+
+    requestAnimationFrame(render)
+}
+requestAnimationFrame(render)
+
+</script>
