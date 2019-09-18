@@ -13,6 +13,7 @@ let w = window.innerWidth
 let h = window.innerHeight
 let angle = 0
 let mode = 0
+const modeName = ["atlas", "single"]
 
 let image = new Image()
 image.src = 'tileset.png'
@@ -53,6 +54,12 @@ render = ts => {
             }
         }
     }
+
+    c.font = '40pt Arial'
+    c.fillStyle='#000'
+    c.fillRect(w - 350, 0, 350, 120)
+    c.fillStyle='#f00'
+    c.fillText(modeName[mode], w - 320,80)
 
     c.setTransform(1, 0, 0, 1, 0, 0)
     requestAnimationFrame(render)

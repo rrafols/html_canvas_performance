@@ -70,9 +70,11 @@ render = ts => {
 
     if(mode == RECT || mode == PATH) {
         //c.save()
+        
         c.translate(w/2, h/2)
         c.rotate(angle)
         c.translate(-w/2, -h/2)
+
         // c.setTransform(Math.cos(angle), Math.sin(angle),
         //                -Math.sin(angle), Math.cos(angle),
         //                0, 0)
