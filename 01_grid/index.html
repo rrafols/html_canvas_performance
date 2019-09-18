@@ -8,6 +8,7 @@ let w = window.innerWidth
 let h = window.innerHeight
 let angle = 0
 let mode = 0
+let calc_path = new Path2D()
 let path = new Path2D()
 
 //use strokerect
@@ -45,10 +46,10 @@ rotate = (x, y, angle) => {
 }
 
 initPath = () => {
-    path = new Path2D()
+    calc_path = new Path2D()
     for(let i = 0; i < h / GRID_SIZE; i++) {
         for(let j = 0; j < w / GRID_SIZE; j++) {
-            path.rect(j * GRID_SIZE, i * GRID_SIZE, GRID_SIZE, GRID_SIZE)
+            calc_path.rect(j * GRID_SIZE, i * GRID_SIZE, GRID_SIZE, GRID_SIZE)
         }
     }
 }
@@ -60,6 +61,7 @@ render = ts => {
     c.fillStyle = '#28a'
     c.strokeStyle = '#fff'
 
+    path = new Path2D()
     if(lastGridSize != GRID_SIZE) {
         lastGridSize = GRID_SIZE
 
@@ -104,8 +106,10 @@ render = ts => {
             }
         }
     }
-    if(mode == PATH || mode == CALC) c.stroke(path)
+    if(mode == PATH)c.stroke(calc_path)
+    if(mode == CALC) c.stroke(path)
     if(mode == CALC_DIR) c.stroke()
+
     if(mode == RECT || mode == PATH) {
         // c.restore()
         c.setTransform(1, 0, 0, 1, 0, 0)
